@@ -1,0 +1,24 @@
+{
+    "name": "cass-livery-swapper",
+    "productName": "CASS Livery Swapper",
+    "version": "0.0.1",
+    "description": "script swap liveries",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "elec": "electron index.js",
+        "build": "electron-packager . --overwrite --icon=masking.ico --platform=win32 --arch=x64 --out=built",
+        "setup": "node build.js"
+    },
+    "author": "Company3",
+    "license": "ISC",
+    "devDependencies": {
+        "electron": "^26.0.0",
+        "electron-packager": "^17.1.1",
+        "electron-squirrel-startup": "^1.0.0",
+        "electron-winstaller": "^4.0.1"
+    },
+    "dependencies": {
+        "photonkit": "^0.1.2"
+    }
+}
