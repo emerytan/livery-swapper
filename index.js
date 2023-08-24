@@ -1,11 +1,6 @@
 const { app, BrowserWindow, webContents, ipcMain, dialog } = require('electron')
 const path = require('path')
-const {
-    StringDecoder
-} = require('string_decoder')
-const decoder = new StringDecoder('utf8')
 let win = null
-let appState
 
 
 if (handleSquirrelEvent(app)) {
@@ -27,9 +22,8 @@ function createWindow() {
 
 app.whenReady().then(() => {
     ipcMain.handle('ping', () => 'pong')
-    ipcMain.handle('dialog', (event, method, params) => {       
-        console.log(dialog[method](params));
-        return dialog[method](params);
+    ipcMain.handle('dialog', (event, method, params) => {
+        return dialog[method](params)
       })
     
     createWindow()
@@ -45,19 +39,6 @@ app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
     }
-})
-
-ipcMain.on('view loaded', () => {
-    console.log('ipc: view loaded');
-    win.webContents.send('init view', 'CASS Livery Swapper 0.0.1')
-})
-
-ipcMain.on('set basepath', (event, msg) => {
-
-})
-
-ipcMain.on('select-dirs', () => {
-    console.log('select dirs');
 })
 
 function handleSquirrelEvent(application) {
