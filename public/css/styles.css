@@ -74,7 +74,7 @@ legend {
     border-color: #ccc;
     margin: 20px auto;
     font-size: small;
-    /* display: inherit; */
+    display: block;
     height: 50px;
     width: 150px;
     transition: all 0.15s;

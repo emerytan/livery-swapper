@@ -1,6 +1,20 @@
 const { app, BrowserWindow, webContents, ipcMain, dialog } = require('electron')
 const path = require('path')
+const Store = require('electron-store')
+const store = new Store()
+const { checkFiles } = require('./test.js')
 let win = null
+let steamPath = 'dead'
+let overridePath = './Vehicles/Textures/CustomLiveries/Overrides/formula_usa_2023'
+let fullPath = ''
+
+store.set('overridePath', overridePath)
+
+if (store.get('steamPath') !== undefined) {
+    steamPath = store.get('steamPath')
+    fullPath = path.join(steamPath, overridePath)
+    checkFiles(fullPath)
+}
 
 
 if (handleSquirrelEvent(app)) {
@@ -16,12 +30,12 @@ function createWindow() {
         }
     })
     win.loadFile('./index.html')
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
 }
 
 
 app.whenReady().then(() => {
-    ipcMain.handle('ping', () => 'pong')
+    ipcMain.handle('store', () => fullPath)
     ipcMain.handle('dialog', (event, method, params) => {
         return dialog[method](params)
       })
@@ -41,11 +55,24 @@ app.on('activate', () => {
     }
 })
 
+
+// IPCS
+ipcMain.on('steamPath', (event, msg) => {
+    console.log(msg)
+    steamPath = msg.steamPath
+    fullPath = path.join(steamPath, overridePath)
+    store.set('steamPath', fullPath)
+    console.log(fullPath)
+})
+
+
+// squirrel shit
 function handleSquirrelEvent(application) {
     if (process.argv.length === 1) {
         return false;
     }
 
+    
     const ChildProcess = require('child_process');
     const appFolder = path.resolve(process.execPath, '..');
     const rootAtomFolder = path.resolve(appFolder, '..');

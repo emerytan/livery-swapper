@@ -19,6 +19,7 @@
         "electron-winstaller": "^4.0.1"
     },
     "dependencies": {
+        "electron-store": "^8.1.0",
         "photonkit": "^0.1.2"
     }
 }
