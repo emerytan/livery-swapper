@@ -1,12 +1,6 @@
 const fs = require('node:fs')
 const path = require('node:path')
 
-let ams2path = 'F:/SteamLibrary/steamapps/common/Automobilista 2'
-let overridePath = './Vehicles/Textures/CustomLiveries/Overrides/formula_usa_2023'
-
-let fullPath = path.join(ams2path, overridePath)
-
-console.log(fullPath)
 
 const liveryFiles = [
     'Formula_USA_2023.xml',
@@ -26,6 +20,33 @@ const liveryFiles = [
 ]
 
 
+function checkPathAndFiles(srcPath) {
+  const absolutePath = path.resolve(srcPath)
+
+  if (!fs.existsSync(absolutePath)) {
+    console.log(`absolute path did not resolve...
+    ${absolutePath}`)
+    return false
+  }
+
+  let allFilesExist = true
+
+  liveryFiles.forEach(fileName => {
+    const filePath = path.join(absolutePath, fileName)
+
+    if (!fs.existsSync(filePath)) {
+      console.log(`missing file: ${fileName}`)
+      allFilesExist = false
+    }
+  })
+
+  return allFilesExist
+}
+
+
+module.exports = checkPathAndFiles
+
+/*
 module.exports.checkFiles = function(srcPath) {
     let state = 0
     for (let index = 0; index < liveryFiles.length; index++) {
@@ -38,7 +59,4 @@ module.exports.checkFiles = function(srcPath) {
           }
     }
 }
-
-
-
-
+*/

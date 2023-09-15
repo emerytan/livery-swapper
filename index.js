@@ -2,18 +2,25 @@ const { app, BrowserWindow, webContents, ipcMain, dialog } = require('electron')
 const path = require('path')
 const Store = require('electron-store')
 const store = new Store()
-const { checkFiles } = require('./test.js')
+const checkPathAndFiles = require('./test.js')
 let win = null
 let steamPath = 'dead'
 let overridePath = './Vehicles/Textures/CustomLiveries/Overrides/formula_usa_2023'
 let fullPath = ''
+let pathInit = false
 
 store.set('overridePath', overridePath)
 
 if (store.get('steamPath') !== undefined) {
     steamPath = store.get('steamPath')
-    fullPath = path.join(steamPath, overridePath)
-    checkFiles(fullPath)
+    console.log('store steam path');
+    console.log(steamPath)
+    const allTestsPass = checkPathAndFiles(steamPath)
+
+    if (allTestsPass) {
+        console.log('all tests passed')
+        pathInit = true
+    }
 }
 
 
@@ -35,7 +42,7 @@ function createWindow() {
 
 
 app.whenReady().then(() => {
-    ipcMain.handle('store', () => fullPath)
+    ipcMain.handle('store', () => steamPath)
     ipcMain.handle('dialog', (event, method, params) => {
         return dialog[method](params)
       })
@@ -59,10 +66,7 @@ app.on('activate', () => {
 // IPCS
 ipcMain.on('steamPath', (event, msg) => {
     console.log(msg)
-    steamPath = msg.steamPath
-    fullPath = path.join(steamPath, overridePath)
-    store.set('steamPath', fullPath)
-    console.log(fullPath)
+    
 })
 
 
